@@ -690,21 +690,17 @@ class GitHubService {
   final String owner;
   final String repo;
   final String branch;
-  final String? token;
 
   GitHubService({
     required this.owner,
     required this.repo,
     this.branch = 'master',
-    this.token = 'ADD TOKEN',
   });
 
   Future<List<dynamic>> fetchAllCommits({int perPage = 30}) async {
     final url =
         'https://api.github.com/repos/$owner/$repo/commits?sha=$branch&per_page=$perPage';
-    final Map<String, String> headers =
-        token != null ? {'Authorization': 'token $token'} : {};
-    final response = await http.get(Uri.parse(url), headers: headers);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -715,9 +711,7 @@ class GitHubService {
 
   Future<Map<String, dynamic>> fetchCommitDetails(String sha) async {
     final url = 'https://api.github.com/repos/$owner/$repo/commits/$sha';
-    final Map<String, String> headers =
-        token != null ? {'Authorization': 'token $token'} : {};
-    final response = await http.get(Uri.parse(url), headers: headers);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -729,9 +723,7 @@ class GitHubService {
   Future<List<dynamic>> fetchWorkflowRuns({int perPage = 10}) async {
     final url =
         'https://api.github.com/repos/$owner/$repo/actions/runs?branch=$branch&per_page=$perPage';
-    final Map<String, String> headers =
-        token != null ? {'Authorization': 'token $token'} : {};
-    final response = await http.get(Uri.parse(url), headers: headers);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
